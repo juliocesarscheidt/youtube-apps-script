@@ -1,5 +1,5 @@
 function callApi(url, method, headers = null){
-  const options = { method, muteHttpExceptions: true, contentType: "application/json" };
+  const options = { method, muteHttpExceptions: true, contentType: 'application/json' };
   if (headers !== null) {
     fetchOptions.headers = headers;
   }

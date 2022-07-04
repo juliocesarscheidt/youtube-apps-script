@@ -2,15 +2,20 @@ function formatDateString(date) {
   return Utilities.formatDate(date, Session.getScriptTimeZone(), 'yyyy-MM-dd');
 }
 
-function searchVideos(query, maxResults = 10) {
+function searchVideos(query, channelId, maxResults = 10) {
   const results = YouTube.Search.list('id,snippet', {
+    channelId,
     q: query,
     maxResults,
   });
   if (results === null) {
     return [];
   }
-  return results.items.map((item)=> `[${item.id.videoId}] Title: ${item.snippet.title}`);
+  return results.items.map((item)=> ({
+    'id': item.id.videoId,
+    'title': item.snippet.title,
+    'description': item.snippet.description,
+  }));
 }
 
 function getLastMonthChannelStatistics(channelId) {
@@ -66,11 +71,13 @@ function entrypoint() {
   // console.log('events', events);
   // console.log('events.length', events.length);
 
-  // const videos = searchVideos('Docker 101')
+  const channelId = 'UCHkkpZ7unPtC9sjzIF2jD1A';
+
+  // const videos = searchVideos('Node JS - API com json server', channelId)
   // console.log('videos', videos);
   // console.log('videos.length', videos.length);
-
-  const channelStats = getLastMonthChannelStatistics('UCHkkpZ7unPtC9sjzIF2jD1A')
+  
+  const channelStats = getLastMonthChannelStatistics(channelId)
   console.log('channelStats', channelStats);
 }
 
@@ -79,8 +86,6 @@ function doGet(e) {
   console.log('params', params);
 
   const { channelId } = JSON.parse(params)['parameter'];
-
-  // const channelId = 'UCHkkpZ7unPtC9sjzIF2jD1A';
   const channelStats = getLastMonthChannelStatistics(channelId);
 
   const response = {
@@ -91,4 +96,4 @@ function doGet(e) {
   return HtmlService.createHtmlOutput(JSON.stringify(response));
 }
 
-// https://script.google.com/macros/s/AKfycbwfEZyZY7vpTFPato3gAhokVTc5It896tikVLPlbqpigfRdM94Bi5f8_9U6TDJKiz72/exec?channelId=UCHkkpZ7unPtC9sjzIF2jD1A
+// GET https://script.google.com/macros/s/DEPLOYMENT_ID/exec?channelId=UCHkkpZ7unPtC9sjzIF2jD1A
