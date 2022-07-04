@@ -34,11 +34,8 @@ function updateVideo(videoId, title, description, categoryId) {
   console.log('originalTitle', originalTitle);
 
   // max length = 100 characters
-  const updatedTitle = title + ' - updated ' + new Date().toLocaleString();
+  const updatedTitle = originalTitle + ' - updated ' + new Date().toLocaleString();
   console.log('updatedTitle', updatedTitle);
-
-  // const oldTitle = updatedTitle.replace(/\s-\supdated.*/gi, '');
-  // console.log('oldTitle', oldTitle);
 
   const resource = {
     snippet: {
@@ -48,6 +45,8 @@ function updateVideo(videoId, title, description, categoryId) {
     },
     id: videoId
   };
+  console.log('resource', resource);
+
   YouTube.Videos.update(resource, 'id,snippet');
 }
 
@@ -67,13 +66,11 @@ function youtubeApiFetch() {
   console.log('videos', videos);
 
   const video = videos[0];
-  const videoId = video.id;
-  const videoTitle = video.title;
-  const videoDescription = video.description;
+  const { id, title, description } = video;
 
-  console.log('videoId', videoId);
-  console.log('videoTitle', videoTitle);
-  console.log('videoDescription', videoDescription);
+  console.log('id', id);
+  console.log('title', title);
+  console.log('description', description);
 
-  updateVideo(videoId, videoTitle, videoDescription, categoryId);
+  updateVideo(id, title, description, categoryId);
 }
